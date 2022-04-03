@@ -2,7 +2,7 @@ package com.demoqa;
 
 import org.junit.jupiter.api.*;
 
-public class SimpleTest {
+public class JUnit5Test {
     @BeforeAll
     static void initDB() {
         System.out.println("###     BeforeAll");
