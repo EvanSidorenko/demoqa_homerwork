@@ -1,44 +1,42 @@
-package com.demoqa;
+package test;
 
 import com.codeborne.selenide.Configuration;
 import com.github.javafaker.Faker;
+import components.Calendar;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import pages.RegistrationPageObjects;
+import page.RegFormPage;
 
 import java.util.Locale;
-
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.*;
+import static java.lang.String.format;
 
 public class RegistrationFormTestsWithFaker {
-    RegistrationPageObjects registrationPageObjects = new RegistrationPageObjects();
+    RegFormPage regFormPage = new RegFormPage();
 
     Faker faker = new Faker(new Locale("en"));
+    String firstName = faker.name().firstName();
+    String lastName = faker.name().lastName();
+    String userEmail = faker.internet().emailAddress();
+    String userNumber = faker.numerify("##########");
+    String address = faker.address().fullAddress();
 
+    String checkFirstNameLastName = format("%s %s", firstName, lastName);
     @BeforeAll
     static void setUp() {
         Configuration.holdBrowserOpen = true;
         Configuration.baseUrl = "https://demoqa.com";
         Configuration.browserSize = "1280x609";
-
     }
 
     @Test
     void fillFormTest() {
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
-        String userEmail = faker.internet().emailAddress();
-        String userNumber = "9998887766";
-        String address = faker.address().fullAddress();
-
-        registrationPageObjects.openPage()
+        regFormPage.openPage()
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setEmail(userEmail)
                 .setGender()
                 .setUserNumber(userNumber)
-                .setDateofBirth()
+                .setDateOfBirth()
                 .setSubject()
                 .setHobby()
                 .uploadPicture()
@@ -47,7 +45,8 @@ public class RegistrationFormTestsWithFaker {
                 .selectCity()
                 .clickSubmit()
 
-                .checkResult(firstName + " " + lastName)
+                .checkTitle("Thanks for submitting the form")
+                .checkResult(checkFirstNameLastName)
                 .checkResult(userEmail)
                 .checkResult("Male")
                 .checkResult("13 January,1992")
