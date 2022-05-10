@@ -1,26 +1,42 @@
 package test;
 
 import com.codeborne.selenide.Configuration;
-import com.github.javafaker.Faker;
-import components.Calendar;
+import data.Faker;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import page.RegFormPage;
 
-import java.util.Locale;
+import java.time.LocalDate;
+
 import static java.lang.String.format;
 
 public class RegistrationFormTestsWithFaker {
     RegFormPage regFormPage = new RegFormPage();
+    Faker faker = new Faker();
 
-    Faker faker = new Faker(new Locale("en"));
-    String firstName = faker.name().firstName();
-    String lastName = faker.name().lastName();
-    String userEmail = faker.internet().emailAddress();
-    String userNumber = faker.numerify("##########");
-    String address = faker.address().fullAddress();
+    //FakerData
+    String firstName = faker.getFirstName();
+    String lastName = faker.getLastName();
+    String userEmail = faker.getUserEmail();
+    String userGender = faker.getGender();
+    String userNumber = faker.getUserNumber();
+    String userAddress = faker.getAddress();
+    String userSubject = faker.getSubject();
+    LocalDate birthDate = faker.getDate();
+    String hobby = faker.getHobby();
+    String imagePath = "download.jpg";
+    String state = faker.getState();
+    String city = faker.getCity(state);
 
-    String checkFirstNameLastName = format("%s %s", firstName, lastName);
+
+    //expected results
+    String expectedFirstNameLastName = format("%s %s", firstName, lastName);
+    String expectedMonth = StringUtils.capitalize(birthDate.getMonth().toString().toLowerCase());
+    String expectedDate = format("%s %s,%s", birthDate.getDayOfMonth(), expectedMonth, birthDate.getYear());
+    String expectedStateAndCity = format("%s %s", state, city);
+
+    String expectedFileName = imagePath.substring(8);
     @BeforeAll
     static void setUp() {
         Configuration.holdBrowserOpen = true;
@@ -34,28 +50,26 @@ public class RegistrationFormTestsWithFaker {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setEmail(userEmail)
-                .setGender()
+                .setGender(userGender)
                 .setUserNumber(userNumber)
-                .setDateOfBirth()
-                .setSubject()
-                .setHobby()
-                .uploadPicture()
-                .setAddress(address)
-                .selectState()
-                .selectCity()
+                .setDateOfBirth(birthDate)
+                .setSubject(userSubject)
+                .setHobby(hobby)
+                .uploadPicture(imagePath)
+                .setAddress(userAddress)
+                .setStateAndCity(state,city)
                 .clickSubmit()
 
                 .checkTitle("Thanks for submitting the form")
-                .checkResult(checkFirstNameLastName)
+                .checkResult(expectedFirstNameLastName)
                 .checkResult(userEmail)
-                .checkResult("Male")
-                .checkResult("13 January,1992")
-                .checkResult("English")
-                .checkResult("Reading")
-                .checkResult("download.jpg")
-                .checkResult(address)
-                .checkResult("Haryana")
-                .checkResult("Karnal");
+                .checkResult(userGender)
+                .checkResult(userNumber)
+                .checkResult(expectedDate)
+                .checkResult(userSubject)
+                .checkResult(expectedFileName)
+                .checkResult(userAddress)
+                .checkResult(expectedStateAndCity);
 
     }
 }

@@ -4,6 +4,8 @@ import com.codeborne.selenide.SelenideElement;
 import components.Calendar;
 import components.StateAndCity;
 
+import java.time.LocalDate;
+
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
@@ -11,15 +13,16 @@ import static com.codeborne.selenide.Selenide.*;
 public class RegFormPage {
     Calendar calendar = new Calendar();
     StateAndCity stateAndCity = new StateAndCity();
+
     //  locators
     SelenideElement firstNameEnter = $("#firstName");
     SelenideElement lastNameEnter = $("#lastName");
     SelenideElement emailEnter = $("#userEmail");
-    SelenideElement genderEnter = $("#genterWrapper").$(byText("Male"));
+    SelenideElement genderEnter = $("#genterWrapper");
     SelenideElement phoneNumberEnter = $("#userNumber");
     SelenideElement dateOfBirth = $("#dateOfBirthInput");
     SelenideElement subjectEnter = $("#subjectsInput");
-    SelenideElement hobbyEnter =   $("#hobbiesWrapper").$(byText("Reading"));
+    SelenideElement hobbyEnter =   $("#hobbiesWrapper");
     SelenideElement pictureUpload = $("#uploadPicture");
     SelenideElement addressEnter = $("#currentAddress");
     //check form
@@ -42,48 +45,47 @@ public class RegFormPage {
         return this;
     }
     public RegFormPage setLastName(String value) {
-       lastNameEnter.setValue(value);
+        lastNameEnter.setValue(value);
         return this;
     }
     public RegFormPage setEmail(String value) {
         emailEnter.setValue(value);
         return this;
     }
-    public RegFormPage setGender() {
-     genderEnter.click();
+    public RegFormPage setGender(String gender) {
+        genderEnter.$(byText(gender)).click();
         return this;
     }
     public RegFormPage setUserNumber(String value) {
-      phoneNumberEnter.setValue(value);
+        phoneNumberEnter.setValue(value);
         return this;
     }
-    public RegFormPage setDateOfBirth() {
+    public RegFormPage setDateOfBirth(LocalDate birth) {
         dateOfBirth.click();
-        calendar.setDate();
+        calendar.setDate(birth);
         return this;
     }
-    public RegFormPage setSubject() {
-        subjectEnter.setValue("English").pressEnter();
+    public RegFormPage setSubject(String subject){
+        subjectEnter.setValue(subject).pressEnter();
         return this;
     }
-    public RegFormPage setHobby() {
+    public RegFormPage setHobby(String hobby) {
         hobbyEnter.click();
         return this;
     }
-    public RegFormPage uploadPicture() {
+    public RegFormPage uploadPicture(String imagePath) {
         pictureUpload.uploadFromClasspath("download.jpg");
         return this;
     }
-    public RegFormPage setAddress(String value) {
-        addressEnter.setValue(value);
+    public RegFormPage setAddress(String address) {
+        addressEnter.setValue(address);
         return this;
     }
-    public RegFormPage selectState() {
-        StateAndCity.setState();
-        return this;
-    }
-    public RegFormPage selectCity() {
-        StateAndCity.setCity();
+    public RegFormPage setStateAndCity(String state, String city) {
+        $("#state").click();
+        stateAndCity.setState(state);
+        $("#city").click();
+        stateAndCity.setCity(city);
         return this;
     }
     public RegFormPage clickSubmit() {
@@ -99,5 +101,4 @@ public class RegFormPage {
         checkForm.shouldHave(text(value));
         return this;
     }
-
 }
