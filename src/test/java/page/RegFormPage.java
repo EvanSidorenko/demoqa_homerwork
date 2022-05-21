@@ -70,7 +70,7 @@ public class RegFormPage {
         return this;
     }
     public RegFormPage setHobby(String hobby) {
-        hobbyEnter.click();
+        hobbyEnter.$(byText(hobby)).click();
         return this;
     }
     public RegFormPage uploadPicture(String imagePath) {

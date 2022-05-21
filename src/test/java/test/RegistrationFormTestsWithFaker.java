@@ -67,6 +67,7 @@ public class RegistrationFormTestsWithFaker {
                 .checkResult(userNumber)
                 .checkResult(expectedDate)
                 .checkResult(userSubject)
+                .checkResult(hobby)
                 .checkResult(expectedFileName)
                 .checkResult(userAddress)
                 .checkResult(expectedStateAndCity);
